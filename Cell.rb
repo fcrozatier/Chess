@@ -6,4 +6,8 @@ class Cell
     @piece = nil
   end
 
+  def empty?
+    piece.nil?
+  end
+
 end
