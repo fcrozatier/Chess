@@ -19,11 +19,7 @@ class Board
 
   def column(col_letter)
     col_number = col_letter.ord-65
-    col = []
-    board.each do |row| 
-      col << row[col_number]
-    end
-    col
+    board.map { |row| row[col_number] }
   end
 
 end
