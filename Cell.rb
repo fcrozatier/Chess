@@ -12,7 +12,7 @@ class Cell
   end
 
   def to_s
-    piece.nil? ? name : piece.symbol
+    emtpy? ? name : piece.symbol
   end
 
 end

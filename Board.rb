@@ -1,6 +1,5 @@
 class Board
   attr_reader :board
-  attr_accessor :active_pieces
   
   def initialize
     @board = Array.new(8) { |i| Array.new(8) { |j| Cell.new((65+j).chr+(i+1).to_s)} }
@@ -8,10 +7,12 @@ class Board
   end
 
   def display
-    board.reverse.each do |row|
-      puts row.map { |cell| cell.to_s }.join(' | ').prepend(' '*10)
-      puts ('-'*35).prepend(' '*10)
+    puts ('-'*33).prepend(' '*12)
+    board.reverse.each_with_index do |row,i|
+      puts row.map { |cell| cell.to_s }.join(' | ').+(' |').prepend(' '*10+"#{8-i} | ")
+      puts ('-'*33).prepend(' '*12)
     end
+    puts ('A'..'H').to_a.join('   ').prepend(' '*14)
     nil
   end
 
@@ -25,7 +26,6 @@ class Board
   end
 
   def add(piece)
-    self.active_pieces << piece
     row_number, col_number = position_parser(piece.position)
     self.board[row_number][col_number].piece = piece
   end
