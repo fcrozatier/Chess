@@ -1,9 +1,11 @@
+require 'singleton'
+
 class Board
+  include Singleton
   attr_reader :board
   
   def initialize
     @board = Array.new(8) { |i| Array.new(8) { |j| Cell.new((65+j).chr+(i+1).to_s)} }
-    @active_pieces = []
   end
 
   def display

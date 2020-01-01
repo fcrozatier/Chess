@@ -12,7 +12,7 @@ class Cell
   end
 
   def to_s
-    emtpy? ? name : piece.symbol
+    empty? ? ' ' : piece.symbol
   end
 
 end
