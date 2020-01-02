@@ -21,4 +21,7 @@ class Piece
     @@symbol_correspondance[self.class][color]
   end
 
+  def possible_moves
+  end
+
 end

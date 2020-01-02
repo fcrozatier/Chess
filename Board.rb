@@ -18,13 +18,24 @@ class Board
     nil
   end
 
-  def row(row_number)
-    board[row_number-1]
+  def left(position)
+    row_number, col_number = position_parser(position)
+    board[row_number][0...col_number].reverse
   end
 
-  def column(col_letter)
-    col_number = col_letter.ord-65
-    board.map { |row| row[col_number] }
+  def right(position)
+    row_number, col_number = position_parser(position)
+    board[row_number][col_number+1..]
+  end
+
+  def up(position)
+    row_number, col_number = position_parser(position)
+    board.map { |row| row[col_number] }[row_number+1..]
+  end
+
+  def down(position)
+    row_number, col_number = position_parser(position)
+    board.map { |row| row[col_number] }[0...row_number].reverse
   end
 
   def add(piece)
