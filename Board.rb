@@ -38,6 +38,32 @@ class Board
     board.map { |row| row[col_number] }[0...row_number].reverse
   end
 
+  def upright(position)
+    row_number, col_number = position_parser(position)
+    y_intercept = row_number - col_number
+    board[row_number+1...8+y_intercept].map { |row| col_number += 1 ; row[col_number] }
+  end
+
+  def upleft(position)
+    row_number, col_number = position_parser(position)
+    y_intercept = row_number + col_number
+    board[row_number+1..y_intercept].map { |row| col_number -= 1 ; row[col_number] }
+  end
+
+  def downright(position)
+    row_number, col_number = position_parser(position)
+    y_intercept = row_number + col_number
+    start = [0, y_intercept-8].max
+    board[start...row_number].reverse.map { |row| col_number += 1 ; row[col_number] }
+  end
+
+  def downleft(position)
+    row_number, col_number = position_parser(position)
+    y_intercept = row_number - col_number
+    start = [0,0+y_intercept].max
+    board[start...row_number].reverse.map { |row| col_number -= 1 ; row[col_number] }
+  end
+
   def add(piece)
     row_number, col_number = position_parser(piece.position)
     self.board[row_number][col_number].piece = piece
