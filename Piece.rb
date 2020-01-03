@@ -2,7 +2,7 @@ require_relative 'Movable.rb'
 
 class Piece
   include Movable
-  attr_reader :color, :symbol
+  attr_reader :board, :color, :symbol
   attr_accessor :position
 
   @@symbol_correspondance = { 
@@ -14,7 +14,8 @@ class Piece
     "Rook" => {b: "\u2656", w: "\u265C"},
   }
 
-  def initialize(color, position)
+  def initialize(board, color, position)
+    @board = board
     @color = color
     @position = position
     @symbol = @@symbol_correspondance[self.class.to_s][color].encode("utf-8")

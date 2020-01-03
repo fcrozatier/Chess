@@ -1,16 +1,14 @@
-require 'singleton'
-
 class Board
-  include Singleton
-  attr_reader :board
+  attr_reader :cells
   
   def initialize
-    @board = Array.new(8) { |i| Array.new(8) { |j| Cell.new((65+j).chr+(i+1).to_s)} }
+    @cells = Array.new(8) { |i| Array.new(8) { |j| Cell.new((65+j).chr+(i+1).to_s)} }
+    @pieces = []
   end
 
   def display
     puts ('-'*33).prepend(' '*12)
-    board.reverse.each_with_index do |row,i|
+    cells.reverse.each_with_index do |row,i|
       puts row.map { |cell| cell.to_s }.join(' | ').+(' |').prepend(' '*10+"#{8-i} | ")
       puts ('-'*33).prepend(' '*12)
     end
@@ -20,7 +18,7 @@ class Board
 
   def add(piece)
     row_number, col_number = piece.coordinates
-    self.board[row_number][col_number].piece = piece
+    self.cells[row_number][col_number].piece = piece
   end
 
 end
