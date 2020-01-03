@@ -1,7 +1,7 @@
 class Knight < Piece
 
-  def initialize(color, position)
-    super(color, position)
+  def possible_moves
+
   end
 
 end

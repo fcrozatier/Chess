@@ -1,4 +1,7 @@
+require_relative 'Movable.rb'
+
 class Piece
+  include Movable
   attr_reader :color, :symbol
   attr_accessor :position
 
@@ -16,6 +19,13 @@ class Piece
     @position = position
     @symbol = @@symbol_correspondance[self.class.to_s][color].encode("utf-8")
   end
+
+  def coordinates
+    col_number = position[0].ord-65
+    row_number = position[1].to_i-1
+    [row_number, col_number]
+  end
+
 
   def possible_moves
   end
