@@ -3,7 +3,6 @@ class Board
   
   def initialize
     @cells = Array.new(8) { |i| Array.new(8) { |j| Cell.new((65+j).chr+(i+1).to_s)} }
-    @pieces = []
   end
 
   def display
@@ -17,8 +16,8 @@ class Board
   end
 
   def add(piece)
-    row_number, col_number = piece.coordinates
-    self.cells[row_number][col_number].piece = piece
+    x, y = piece.position
+    self.cells[y][x].piece = piece
   end
 
 end

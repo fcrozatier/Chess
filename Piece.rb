@@ -3,7 +3,6 @@ require_relative 'Movable.rb'
 class Piece
   include Movable
   attr_reader :board, :color, :symbol
-  attr_accessor :position
 
   @@symbol_correspondance = { 
     "Bishop" => {b: "\u2657", w: "\u265D"},
@@ -17,18 +16,33 @@ class Piece
   def initialize(board, color, position)
     @board = board
     @color = color
-    @position = position
+    @position = Position.new(position)
     @symbol = @@symbol_correspondance[self.class.to_s][color].encode("utf-8")
+    @legal_moves = []
   end
-
-  def coordinates
-    col_number = position[0].ord-65
-    row_number = position[1].to_i-1
-    [row_number, col_number]
-  end
-
 
   def possible_moves
+    moves = []
+    @legal_moves.each do |prefix|
+      moves += method(prefix).call
+        .take_while { |cell| cell.empty? }
+        .select { |cell| cell.empty? || cell.piece.color != color }
+    end
+    moves
+  end
+
+  def position
+    [x, y]
+  end
+
+  private
+
+  def x
+    @position.col_number
+  end
+
+  def y
+    @position.row_number
   end
 
 end
