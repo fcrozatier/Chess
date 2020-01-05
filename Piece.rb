@@ -10,6 +10,7 @@ class Piece
     @position = Position.new(position)
     @unicode_symbol = Unicode.new(self.class.to_s, color)
     @legal_moves = []
+    @moves = 0
   end
 
   def possible_moves

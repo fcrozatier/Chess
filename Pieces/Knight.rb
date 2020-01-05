@@ -1,7 +1,33 @@
 class Knight < Piece
 
-  def possible_moves
+  def initialize(board, color, position)
+    super(board, color, position)
+    @legal_moves = [[2,1],[2,-1],[1,2],[1,-2],[-1,2],[-1,-2],[-2,1],[-2,-1]] 
+  end
 
+  def possible_moves
+    moves = []
+    @legal_moves.each do |move|
+      new_position = translate(position, move)
+      if onboard?(new_position)
+        new_x, new_y = new_position
+        new_cell = board.cells[new_y][new_x]
+        if new_cell.empty? || new_cell.piece.color != color
+          moves << new_cell 
+        end
+      end
+    end
+    moves
+  end
+
+  private
+
+  def translate(position, vector)
+    [position[0]+vector[0],position[1]+vector[1]]
+  end
+
+  def onboard?(position)
+    0 <= position[0] && position[0] <= 7 && 0 <= position[1] && position[1] <= 7
   end
 
 end
