@@ -1,10 +1,10 @@
 class Position
-  attr_reader :position, :col_number, :row_number
+  attr_reader :position, :x, :y
     
   def initialize(position)
     @position = position
-    @col_number = position[0].ord-65
-    @row_number = position[1].to_i-1
+    @x = position[0].ord-65
+    @y = position[1].to_i-1
   end
 
 end

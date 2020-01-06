@@ -34,11 +34,11 @@ class Piece
   private
 
   def x
-    @position.col_number
+    @position.x
   end
 
   def y
-    @position.row_number
+    @position.y
   end
 
 end

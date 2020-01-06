@@ -2,12 +2,12 @@ class Unicode
   attr_reader :character
 
   @@correspondance = { 
-    "Bishop" => {b: "\u2657", w: "\u265D"},
-    "King" => {b: "\u2654", w: "\u265A"},
-    "Knight" => {b: "\u2658", w: "\u265E"},
-    "Pawn" => {b: "\u2659", w: "\u265F"},
-    "Queen" => {b: "\u2655" , w: "\u265B"},
-    "Rook" => {b: "\u2656", w: "\u265C"},
+    "Bishop" => {black: "\u2657", white: "\u265D"},
+    "King" => {black: "\u2654", white: "\u265A"},
+    "Knight" => {black: "\u2658", white: "\u265E"},
+    "Pawn" => {black: "\u2659", white: "\u265F"},
+    "Queen" => {black: "\u2655" , white: "\u265B"},
+    "Rook" => {black: "\u2656", white: "\u265C"},
   }
 
   def initialize(class_name, color)

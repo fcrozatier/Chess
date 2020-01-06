@@ -2,7 +2,7 @@ class Pawn < Piece
 
   def initialize(board, color, position)
     super(board, color, position)
-    @legal_moves = (color == :w) ? "up" : "down"
+    @legal_moves = (color == :white) ? "up" : "down"
   end
 
   def possible_moves
