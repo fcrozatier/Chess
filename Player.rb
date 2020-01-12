@@ -1,10 +1,14 @@
 class Player
+  attr_reader :king
+  attr_accessor :manager
   
-  def initialize(board, color)
+  def initialize(board, color, manager = nil)
     @board = board
     @color = color
-    @active_pieces = initialize_pieces
     @check = false
+    @active_pieces = []
+    #initialize_pieces
+    @manager = manager
   end
 
   def possible_moves
@@ -13,17 +17,21 @@ class Player
 
   def plays(initial, final)
     if valid_position(initial) && valid_position(final)
-      initial = Position.new(initial)
-      initial_cell = @board.cells[initial.y][initial.x]
+      initial_position = Position.new(initial)
+      initial_cell = @board.cells[initial_position.y][initial_position.x]
       if initial_cell.empty?
         puts "You must choose a non empty initial cell"
       elsif initial_cell.piece.color != @color
         puts "You cannot move #{initial_cell.piece.color} pieces"
       else
         if initial_cell.piece.possible_moves.map(&:name).include?(final)
-          puts "UPDATING POSITION..."
+          if updatable?(initial, final)
+
+          else
+            puts "This move would leave you under check"
+          end
         else
-          puts "#{initial.position} cannot go to #{final} "
+          puts "#{initial} cannot go to #{final}"
         end
       end
     else
@@ -31,6 +39,26 @@ class Player
     end
   end
 
+  def updatable?(initial, final)
+    virtual_board = Marshal.load(Marshal.dump(@board))
+    initial_position = Position.new(initial)
+    piece = virtual_board.cells[initial_position.y][initial_position.x]
+    virtual_board.update(piece, final)
+    under_check?
+  end
+
+  def check?(other)
+    king = other.king
+    possible_moves.map(&:name).include?(king.position)
+  end
+
+  def under_check?
+    @manager.under_check?(self)
+  end
+
+  def add(piece)
+    @active_pieces << piece
+  end
 
   private
 
@@ -39,22 +67,21 @@ class Player
   end
 
   def initialize_pieces
-    active_pieces = []
     y = (@color == :white) ? 1 : 8
     
     8.times do |i|
-      active_pieces << Pawn.new(@board, @color, (65+i).chr+"2") if @color == :white
-      active_pieces << Pawn.new(@board, @color, (65+i).chr+"7") if @color == :black
+      @active_pieces << Pawn.new(@board, @color, (65+i).chr+"2") if @color == :white
+      @active_pieces << Pawn.new(@board, @color, (65+i).chr+"7") if @color == :black
     end
     [Rook, Knight, Bishop].each_with_index do |class_name, j|
       2.times do |i|
-        active_pieces << class_name.new(@board, @color, (65+j+(7-2*j)*i).chr+"#{y}")
+        @active_pieces << class_name.new(@board, @color, (65+j+(7-2*j)*i).chr+"#{y}")
       end
     end
-    active_pieces << Queen.new(@board, @color, "D#{y}")
-    active_pieces << King.new(@board, @color, "E#{y}")
-
-    active_pieces.each { |piece| @board.add(piece) }
+    @active_pieces << Queen.new(@board, @color, "D#{y}")
+    king = King.new(@board, @color, "E#{y}")
+    @active_pieces << king
+    @king = king
   end
 
 end

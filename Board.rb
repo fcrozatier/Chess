@@ -1,8 +1,8 @@
 class Board
   attr_reader :cells
   
-  def initialize
-    @cells = Array.new(8) { |i| Array.new(8) { |j| Cell.new((65+j).chr+(i+1).to_s)} }
+  def initialize(n = 8, m = 8)
+    @cells = Array.new(n) { |i| Array.new(m) { |j| Cell.new((65+j).chr+(i+1).to_s)} }
   end
 
   def display
@@ -16,8 +16,21 @@ class Board
   end
 
   def add(piece)
-    x, y = piece.position
+    x, y = piece.coordinates
     self.cells[y][x].piece = piece
+  end
+
+  def update(piece, position)
+    remove(piece)
+    piece.position = Position.new(position)
+    add(piece)
+  end
+
+  private 
+
+  def remove(piece)
+    x, y = piece.coordinates
+    self.cells[y][x].piece = nil
   end
 
 end

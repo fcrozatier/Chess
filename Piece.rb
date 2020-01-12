@@ -2,7 +2,8 @@ require_relative 'Movable.rb'
 
 class Piece
   include Movable
-  attr_reader :board, :color
+  attr_reader :color
+  attr_writer :position
 
   def initialize(board, color, position)
     @board = board
@@ -11,6 +12,7 @@ class Piece
     @unicode_symbol = Unicode.new(self.class.to_s, color)
     @legal_moves = []
     @moves = 0
+    @board.add(self)
   end
 
   def possible_moves
@@ -24,6 +26,10 @@ class Piece
   end
 
   def position
+    @position.litteral_position
+  end
+
+  def coordinates
     [x, y]
   end
 

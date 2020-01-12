@@ -10,7 +10,7 @@ class Pawn < Piece
     return moves if y == 7 || y == 0  
 
     c = (@legal_moves == "up") ? 1 : -1
-    next_row = board.cells[y+c] 
+    next_row = @board.cells[y+c] 
     next_cell = next_row[x]
     sides = []
     sides << next_row[x-1] if x-1 >= 0
@@ -19,7 +19,7 @@ class Pawn < Piece
     if next_cell.empty?
       moves << next_cell 
       if @moves == 0
-        next_next_cell = board.cells[y+2*c][x]
+        next_next_cell = @board.cells[y+2*c][x]
         moves << next_next_cell if next_next_cell.empty?
       end
     end

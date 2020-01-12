@@ -2,9 +2,9 @@ class Cell
   attr_reader :name
   attr_accessor :piece
 
-  def initialize(name)
+  def initialize(name, piece = nil)
     @name = name
-    @piece = nil
+    @piece = piece
   end
 
   def empty?

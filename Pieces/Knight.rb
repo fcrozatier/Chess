@@ -11,7 +11,7 @@ class Knight < Piece
       new_position = translate(position, move)
       if onboard?(new_position)
         new_x, new_y = new_position
-        new_cell = board.cells[new_y][new_x]
+        new_cell = @board.cells[new_y][new_x]
         if new_cell.empty? || new_cell.piece.color != color
           moves << new_cell 
         end
@@ -23,7 +23,7 @@ class Knight < Piece
   private
 
   def translate(position, vector)
-    [position[0]+vector[0],position[1]+vector[1]]
+    [x+vector[0],y+vector[1]]
   end
 
   def onboard?(position)
