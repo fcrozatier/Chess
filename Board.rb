@@ -1,5 +1,7 @@
-class Board
-  attr_reader :cells
+require_relative 'Table.rb'
+require_relative 'Cell.rb'
+
+class Board < Table
   
   def initialize(n = 8, m = 8)
     @cells = Array.new(n) { |i| Array.new(m) { |j| Cell.new((65+j).chr+(i+1).to_s)} }
