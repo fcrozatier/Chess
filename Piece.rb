@@ -1,24 +1,22 @@
-require_relative 'Movable.rb'
-
 class Piece
-  include Movable
   attr_reader :color
-  attr_writer :position
+  attr_writer :position, :manager
 
-  def initialize(board, color, position)
-    @board = board
+  def initialize(color, position, manager = nil)
+    @manager = manager
     @color = color
     @position = Position.new(position)
     @unicode_symbol = Unicode.new(self.class.to_s, color)
     @legal_moves = []
     @moves = 0
-    @board.add(self)
+    @manager.notify(self, "Add piece to board") if manager
   end
 
   def possible_moves
+    board = @manager.notify(self, "Piece wants board")
     moves = []
     @legal_moves.each do |prefix|
-      moves += method(prefix).call
+      moves += board.method(prefix).call(x, y)
         .take_while { |cell| cell.empty? }
         .select { |cell| cell.empty? || cell.piece.color != color }
     end
@@ -27,6 +25,12 @@ class Piece
 
   def position
     @position.litteral_position
+  end
+
+  def update_position(new_position)
+    @manager.notify(self, "Remove piece")
+    self.position = Position.new(new_position)
+    @manager.notify(self, "Add piece to board")
   end
 
   def coordinates

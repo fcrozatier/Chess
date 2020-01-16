@@ -1,14 +1,15 @@
 class King < Piece
 
-  def initialize(board, color, position)
-    super(board, color, position)
+  def initialize(color, position, manager)
+    super(color, position, manager)
     @legal_moves = ["left", "right", "up", "down","upleft", "upright", "downleft", "downright"]
   end
 
   def possible_moves
+    board = @manager.notify(self, "Piece wants board")
     moves = []
     @legal_moves.each do |prefix|
-      moves += method(prefix).call.first(1)
+      moves += board.method(prefix).call(x, y).first(1)
         .select { |cell| cell.empty? || cell.piece.color != color }
     end
     moves

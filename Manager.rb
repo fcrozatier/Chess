@@ -1,6 +1,8 @@
-class PlayerManager
+class Manager
+  attr_reader :board
 
-  def initialize(white, black)
+  def initialize(board, white = nil, black = nil)
+    @board = board
     @white = white
     @black = black
   end
@@ -11,5 +13,16 @@ class PlayerManager
 
   def other_player(_sender)
     _sender == @white ? @white : @black
+  end
+
+  def notify(_sender, event)
+    case event
+    when "Add piece to board"
+      @board.add(_sender)
+    when "Remove piece"
+      @board.remove(_sender)
+    when "Piece wants board"
+      @board
+    end
   end
 end

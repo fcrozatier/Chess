@@ -1,17 +1,18 @@
 class Knight < Piece
 
-  def initialize(board, color, position)
-    super(board, color, position)
+  def initialize(color, position, manager)
+    super(color, position, manager)
     @legal_moves = [[2,1],[2,-1],[1,2],[1,-2],[-1,2],[-1,-2],[-2,1],[-2,-1]] 
   end
 
   def possible_moves
+    board = @manager.notify(self, "Piece wants board")
     moves = []
     @legal_moves.each do |move|
       new_position = translate(position, move)
       if onboard?(new_position)
         new_x, new_y = new_position
-        new_cell = @board.cells[new_y][new_x]
+        new_cell = board.cells[new_y][new_x]
         if new_cell.empty? || new_cell.piece.color != color
           moves << new_cell 
         end

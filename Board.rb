@@ -22,14 +22,6 @@ class Board < Table
     self.cells[y][x].piece = piece
   end
 
-  def update(piece, position)
-    remove(piece)
-    piece.position = Position.new(position)
-    add(piece)
-  end
-
-  private 
-
   def remove(piece)
     x, y = piece.coordinates
     self.cells[y][x].piece = nil
