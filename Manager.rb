@@ -1,18 +1,14 @@
 class Manager
   attr_reader :board
 
-  def initialize(board, white = nil, black = nil)
+  def initialize(board)
     @board = board
-    @white = white
-    @black = black
-  end
-
-  def under_check?(_sender)
-    other_player(_sender).check?(_sender)
+    @players = [Player.new(:white, self), Player.new(:black, self)]
   end
 
   def other_player(_sender)
-    _sender == @white ? @white : @black
+    index = @players.index(_sender)
+    @players[index-1]
   end
 
   def notify(_sender, event)
@@ -23,6 +19,22 @@ class Manager
       @board.remove(_sender)
     when "Piece wants board"
       @board
+    when "Player wants board"
+      @board
+    when "Does Player checks other?"
+      other_king_position = other_player(_sender).king.position
+      _sender.possible_moves.map(&:name).include?(other_king_position)
+    when "Is Player under check?"
+      other_player(_sender).possible_moves.map(&:name).include?(_sender.king.position)
     end
   end
+
+  def white
+    @players[0]
+  end
+
+  def black
+    @players[1]
+  end
+
 end

@@ -2,13 +2,12 @@ class Player
   attr_reader :king
   attr_accessor :manager
   
-  def initialize(board, color, manager = nil)
-    @board = board
+  def initialize(color, manager = nil)
     @color = color
     @check = false
     @active_pieces = []
-    #initialize_pieces
     @manager = manager
+    initialize_pieces
   end
 
   def possible_moves
@@ -16,70 +15,67 @@ class Player
   end
 
   def plays(initial, final)
-    if valid_position(initial) && valid_position(final)
-      initial_position = Position.new(initial)
-      initial_cell = @board.cells[initial_position.y][initial_position.x]
-      if initial_cell.empty?
-        puts "You must choose a non empty initial cell"
-      elsif initial_cell.piece.color != @color
-        puts "You cannot move #{initial_cell.piece.color} pieces"
-      else
-        if initial_cell.piece.possible_moves.map(&:name).include?(final)
-          if updatable?(initial, final)
-
-          else
-            puts "This move would leave you under check"
-          end
-        else
-          puts "#{initial} cannot go to #{final}"
+    board = notify("Player wants board")
+    initial_position = Position.new(initial)
+    final_position = Position.new(final)
+    initial_cell = board.cells[initial_position.y][initial_position.x]
+    final_cell = board.cells[final_position.y][final_position.x]
+    
+    if valid_initial_cell?(initial_cell)
+      if initial_cell.piece.possible_moves.map(&:name).include?(final)
+        initial_cell.piece.update_position(final)
+        if under_check?
+          puts "This move would leave you under check"
+          final_cell.piece.update_position(initial)
         end
+      else
+        puts "#{initial} cannot go to #{final}"
       end
-    else
-      puts "Valid cells are of the form [A-H][1-8]"
     end
   end
 
-  def updatable?(initial, final)
-    virtual_board = Marshal.load(Marshal.dump(@board))
-    initial_position = Position.new(initial)
-    piece = virtual_board.cells[initial_position.y][initial_position.x]
-    virtual_board.update(piece, final)
-    under_check?
-  end
-
-  def check?(other)
-    king = other.king
-    possible_moves.map(&:name).include?(king.position)
+  def check?
+    notify("Does Player checks other?")
   end
 
   def under_check?
-    @manager.under_check?(self)
-  end
-
-  def add(piece)
-    @active_pieces << piece
+    notify("Is Player under check?")
   end
 
   private
 
-  def valid_position(position)
+  def notify(msg)
+    @manager.notify(self, msg)
+  end
+
+  def valid_position?(position)
     position.match?(/^[A-H][1-8]$/)
+  end
+
+  def valid_initial_cell?(initial_cell)
+    if initial_cell.empty?
+      puts "You must choose a non empty initial cell"
+    elsif initial_cell.piece.color != @color
+      puts "You cannot move #{initial_cell.piece.color} pieces"
+    else
+      true
+    end
   end
 
   def initialize_pieces
     y = (@color == :white) ? 1 : 8
     
     8.times do |i|
-      @active_pieces << Pawn.new(@board, @color, (65+i).chr+"2") if @color == :white
-      @active_pieces << Pawn.new(@board, @color, (65+i).chr+"7") if @color == :black
+      @active_pieces << Pawn.new(@color, (65+i).chr+"2", @manager) if @color == :white
+      @active_pieces << Pawn.new(@color, (65+i).chr+"7", @manager) if @color == :black
     end
     [Rook, Knight, Bishop].each_with_index do |class_name, j|
       2.times do |i|
-        @active_pieces << class_name.new(@board, @color, (65+j+(7-2*j)*i).chr+"#{y}")
+        @active_pieces << class_name.new(@color, (65+j+(7-2*j)*i).chr+"#{y}", @manager)
       end
     end
-    @active_pieces << Queen.new(@board, @color, "D#{y}")
-    king = King.new(@board, @color, "E#{y}")
+    @active_pieces << Queen.new(@color, "D#{y}", @manager)
+    king = King.new(@color, "E#{y}", @manager)
     @active_pieces << king
     @king = king
   end
