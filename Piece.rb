@@ -31,13 +31,14 @@ class Piece
     @manager.notify(self, "Remove piece")
     self.position = Position.new(new_position)
     @manager.notify(self, "Add piece to board")
+    @moves += 1
   end
 
   def coordinates
     [x, y]
   end
 
-  def symbol
+  def to_s
     @unicode_symbol.character
   end
 

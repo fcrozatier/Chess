@@ -12,7 +12,7 @@ class Cell
   end
 
   def to_s
-    empty? ? ' ' : piece.symbol
+    empty? ? ' ' : piece.to_s
   end
 
 end

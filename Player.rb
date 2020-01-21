@@ -1,6 +1,6 @@
 class Player
   attr_reader :king
-  attr_accessor :manager
+  attr_accessor :manager, :active_pieces
   
   def initialize(color, manager = nil)
     @color = color
@@ -23,13 +23,34 @@ class Player
     
     if valid_initial_cell?(initial_cell)
       if initial_cell.piece.possible_moves.map(&:name).include?(final)
+        capture_logic(final_cell)
         initial_cell.piece.update_position(final)
         if under_check?
           puts "This move would leave you under check"
           final_cell.piece.update_position(initial)
+        else
+          check_logic
         end
       else
         puts "#{initial} cannot go to #{final}"
+      end
+    end
+  end
+
+  def capture_logic(cell)
+    unless cell.empty?
+      if cell.piece.color != @color
+        notify("Player captures", cell.piece)
+      end
+    end
+  end
+
+  def check_logic
+    if check?
+      puts "check!"
+      if checkmate?
+        puts "checkmate!"
+        notify("Checkmate")
       end
     end
   end
@@ -38,14 +59,18 @@ class Player
     notify("Does Player checks other?")
   end
 
+  def checkmate?
+    notify("Does Player checkmate other?")
+  end
+
   def under_check?
     notify("Is Player under check?")
   end
 
   private
 
-  def notify(msg)
-    @manager.notify(self, msg)
+  def notify(msg, arg = nil)
+    @manager.notify(self, msg, arg)
   end
 
   def valid_position?(position)

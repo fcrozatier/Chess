@@ -33,9 +33,4 @@ class Pawn < Piece
     moves
   end
 
-  def update_position(new_position)
-    super(new_position)
-    @moves += 1
-  end
-
 end
