@@ -1,9 +1,10 @@
 class Manager
-  attr_reader :board
+  attr_reader :board, :playing
 
   def initialize(board)
     @board = board
     @players = [Player.new(:white, self), Player.new(:black, self)]
+    @playing = @players[0]
   end
 
   def other_player(_sender)

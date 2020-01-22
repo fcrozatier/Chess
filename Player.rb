@@ -1,5 +1,5 @@
 class Player
-  attr_reader :king
+  attr_reader :king, :color
   attr_accessor :manager, :active_pieces
   
   def initialize(color, manager = nil)
@@ -30,11 +30,13 @@ class Player
           final_cell.piece.update_position(initial)
         else
           check_logic
+          return true
         end
       else
         puts "#{initial} cannot go to #{final}"
       end
     end
+    false
   end
 
   def capture_logic(cell)
@@ -48,10 +50,10 @@ class Player
   def check_logic
     if check?
       puts "check!"
-      if checkmate?
-        puts "checkmate!"
-        notify("Checkmate")
-      end
+      # if checkmate?
+      #   puts "checkmate!"
+      #   notify("Checkmate")
+      # end
     end
   end
 
@@ -71,10 +73,6 @@ class Player
 
   def notify(msg, arg = nil)
     @manager.notify(self, msg, arg)
-  end
-
-  def valid_position?(position)
-    position.match?(/^[A-H][1-8]$/)
   end
 
   def valid_initial_cell?(initial_cell)
