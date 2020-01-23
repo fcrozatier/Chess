@@ -9,11 +9,11 @@ class Piece
     @unicode_symbol = Unicode.new(self.class.to_s, color)
     @legal_moves = []
     @moves = 0
-    @manager.notify(self, "Add piece to board") if manager
+    notify("Add piece to board") if manager
   end
 
   def possible_moves
-    board = @manager.notify(self, "Piece wants board")
+    board = notify("Piece wants board")
     moves = []
     @legal_moves.each do |prefix|
       moves += board.method(prefix).call(x, y)
@@ -28,9 +28,9 @@ class Piece
   end
 
   def update_position(new_position)
-    @manager.notify(self, "Remove piece")
+    notify("Remove piece")
     self.position = Position.new(new_position)
-    @manager.notify(self, "Add piece to board")
+    notify("Add piece to board")
     @moves += 1
   end
 
@@ -43,6 +43,10 @@ class Piece
   end
 
   private
+
+  def notify(msg)
+    @manager.notify(self, msg)
+  end
 
   def x
     @position.x

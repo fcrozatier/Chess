@@ -18,20 +18,33 @@ class Chess
     end
   end
 
+  def start_game
+    until end_of_game?
+      display
+      turn
+      swap_turns
+    end
+  end
+
   def turn
     move = nil
     loop do 
-      move = get_input_logic
+      move = get_input
       if move
         break if @manager.playing.plays(move[0],move[1])
       end
     end
   end
 
-  def get_input_logic
+  def swap_turns
+    @manager.playing = @manager.other_player(playing)
+  end
+
+  def get_input
     input = ""
     loop do
-      puts "#{@manager.playing.color} : what's your move?"
+      puts "Check!" if playing.under_check?
+      puts "#{playing.color.capitalize} : what's your move?"
       input = gets.chomp
       break if valid?(input)
       puts "Your move must be of the form C1C4 to take C1 to C4. [s] to save, [l] to load."
@@ -39,8 +52,11 @@ class Chess
     case input
     when "s"
       save
+      false
     when "l"
       load
+      display      
+      false
     else
       parse(input)
     end
@@ -64,7 +80,7 @@ class Chess
   def checkmate?
     save
     pairs_pieces_moves = []
-    black.active_pieces.each do |piece|
+    playing.active_pieces.each do |piece|
       pairs_pieces_moves << [piece.coordinates, piece.possible_moves.map(&:name)]
     end
     pairs_pieces_moves.each do |pair|
@@ -74,7 +90,7 @@ class Chess
         load
         piece = board.cells[coordinates[1]][coordinates[0]].piece
         piece.update_position(possible_move)
-        unless black.under_check?
+        unless playing.under_check?
           load
           return false
         end
@@ -84,8 +100,25 @@ class Chess
     true
   end
 
+  def end_of_game?
+    if playing.under_check?
+      if checkmate?
+        display
+        puts "Checkmate! #{@manager.other_player(playing).color.capitalize} wins!"
+        true
+      else
+        false
+      end
+    end
+  end
+
   def board 
     @manager.board
+  end
+
+  def display
+    puts `clear`
+    board.display
   end
 
   def white
@@ -94,6 +127,12 @@ class Chess
 
   def black
     @manager.black
+  end
+
+  private 
+
+  def playing 
+    @manager.playing
   end
 
 end

@@ -4,7 +4,6 @@ class Player
   
   def initialize(color, manager = nil)
     @color = color
-    @check = false
     @active_pieces = []
     @manager = manager
     initialize_pieces
@@ -23,13 +22,13 @@ class Player
     
     if valid_initial_cell?(initial_cell)
       if initial_cell.piece.possible_moves.map(&:name).include?(final)
-        capture_logic(final_cell)
+        captured_piece = capture_logic(final_cell)
         initial_cell.piece.update_position(final)
         if under_check?
           puts "This move would leave you under check"
           final_cell.piece.update_position(initial)
+          notify("Undo capture", captured_piece)
         else
-          check_logic
           return true
         end
       else
@@ -37,32 +36,6 @@ class Player
       end
     end
     false
-  end
-
-  def capture_logic(cell)
-    unless cell.empty?
-      if cell.piece.color != @color
-        notify("Player captures", cell.piece)
-      end
-    end
-  end
-
-  def check_logic
-    if check?
-      puts "check!"
-      # if checkmate?
-      #   puts "checkmate!"
-      #   notify("Checkmate")
-      # end
-    end
-  end
-
-  def check?
-    notify("Does Player checks other?")
-  end
-
-  def checkmate?
-    notify("Does Player checkmate other?")
   end
 
   def under_check?
@@ -83,6 +56,16 @@ class Player
     else
       true
     end
+  end
+
+  def capture_logic(cell)
+    piece = cell.piece
+    unless cell.empty?
+      if piece.color != @color
+        notify("Player captures", piece)
+      end
+    end
+    piece
   end
 
   def initialize_pieces
