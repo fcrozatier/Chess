@@ -33,4 +33,40 @@ class Pawn < Piece
     moves
   end
 
+  def update_position(new_position)
+    super(new_position)
+    if new_position[1].to_i == 1 || new_position[1].to_i == 8
+      promotion
+    end
+  end
+
+  def promotion
+    puts "Choose your promotion : [Q]ueen, [R]ook, [B]ishop or [K]night ?"
+    choice = ""
+    loop do
+      choice = gets.chomp
+      break if valid_promotion?(choice)
+      puts "You must choose between [Q]ueen, [R]ook, [B]ishop or [K]night"
+    end
+    self.notify("Remove piece")
+    @manager.method(color).call.active_pieces.delete(self)
+    piece = nil
+    case choice
+    when 'Q'
+      piece = Queen.new(color, position, @manager)
+    when 'R'
+      piece = Rook.new(color, position, @manager)
+    when 'B'
+      piece = Bishop.new(color, position, @manager)
+    when 'K'
+      piece = Knight.new(color, position, @manager)
+    end
+    piece.notify("Add piece to board")
+    @manager.method(color).call.active_pieces << piece
+  end
+
+  def valid_promotion?(choice)
+    choice.match?(/Q|R|B|K/)
+  end
+
 end

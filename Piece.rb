@@ -42,11 +42,11 @@ class Piece
     @unicode_symbol.character
   end
 
-  private
-
   def notify(msg)
     @manager.notify(self, msg)
   end
+
+  private
 
   def x
     @position.x
