@@ -14,7 +14,7 @@ class Player
   end
 
   def plays(initial, final)
-    board = notify("Player wants board")
+    board = notify("Board")
     initial_position = Position.new(initial)
     final_position = Position.new(final)
     initial_cell = board.cells[initial_position.y][initial_position.x]
@@ -61,9 +61,7 @@ class Player
   def capture_logic(cell)
     piece = cell.piece
     unless cell.empty?
-      if piece.color != @color
-        notify("Player captures", piece)
-      end
+      notify("Player captures", piece)
     end
     piece
   end

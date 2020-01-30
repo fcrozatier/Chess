@@ -18,14 +18,8 @@ class Manager
     when "Add piece to board"
       @board.add(_sender)
     when "Remove piece"
-      @board.remove(_sender)
-    when "Add active piece"
-
-    when "Remove active piece"
-      
-    when "Piece wants board"
-      @board
-    when "Player wants board"
+      @board.remove(_sender)  
+    when "Board"
       @board
     when "Player captures"
       other_player(_sender).active_pieces.delete(arg)

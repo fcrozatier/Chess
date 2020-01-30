@@ -3,7 +3,10 @@ class Chess
   def initialize
     board = Board.new
     @manager = Manager.new(board)
+    start_game
   end
+  
+  private 
 
   def save
     save = Marshal.dump(@manager)
@@ -120,16 +123,6 @@ class Chess
     puts `clear`
     board.display
   end
-
-  def white
-    @manager.white
-  end
-
-  def black
-    @manager.black
-  end
-
-  private 
 
   def playing 
     @manager.playing
