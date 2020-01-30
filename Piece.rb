@@ -1,6 +1,7 @@
 class Piece
   attr_reader :color
   attr_writer :position, :manager
+  attr_accessor :nb_moves
 
   def initialize(color, position, manager = nil)
     @manager = manager
@@ -8,7 +9,7 @@ class Piece
     @position = Position.new(position)
     @unicode_symbol = Unicode.new(self.class.to_s, color)
     @legal_moves = []
-    @moves = 0
+    @nb_moves = 0
     notify("Add piece to board") if manager
   end
 
@@ -31,7 +32,7 @@ class Piece
     notify("Remove piece")
     self.position = Position.new(new_position)
     notify("Add piece to board")
-    @moves += 1
+    @nb_moves += 1
   end
 
   def coordinates

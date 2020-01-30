@@ -61,9 +61,7 @@ class Player
   def capture_logic(cell)
     piece = cell.piece
     unless cell.empty?
-      if piece.color != @color
-        notify("Player captures", piece)
-      end
+      notify("Player captures", piece)
     end
     piece
   end

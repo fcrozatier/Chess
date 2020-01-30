@@ -19,7 +19,7 @@ class Pawn < Piece
     
     if next_cell.empty?
       moves << next_cell 
-      if @moves == 0
+      if @nb_moves == 0
         next_next_cell = board.cells[y+2*c][x]
         moves << next_next_cell if next_next_cell.empty?
       end
