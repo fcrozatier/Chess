@@ -6,7 +6,7 @@ class Knight < Piece
   end
 
   def possible_moves
-    board = @manager.notify(self, "Piece wants board")
+    board = @manager.notify(self, "Board")
     moves = []
     @legal_moves.each do |move|
       new_position = translate(position, move)

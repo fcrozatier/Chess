@@ -1,11 +1,12 @@
 class Player
   attr_reader :king, :color
-  attr_accessor :manager, :active_pieces
+  attr_accessor :manager, :active_pieces, :last_move
   
   def initialize(color, manager = nil)
     @color = color
     @active_pieces = []
     @manager = manager
+    @last_move = nil
     initialize_pieces
   end
 
@@ -14,7 +15,7 @@ class Player
   end
 
   def plays(initial, final)
-    board = notify("Player wants board")
+    board = notify("Board")
     initial_position = Position.new(initial)
     final_position = Position.new(final)
     initial_cell = board.cells[initial_position.y][initial_position.x]
@@ -29,6 +30,7 @@ class Player
           final_cell.piece.update_position(initial)
           notify("Undo capture", captured_piece)
         else
+          self.last_move = final_cell.piece
           return true
         end
       else
@@ -42,11 +44,11 @@ class Player
     notify("Is Player under check?")
   end
 
-  private
-
   def notify(msg, arg = nil)
     @manager.notify(self, msg, arg)
   end
+
+  private
 
   def valid_initial_cell?(initial_cell)
     if initial_cell.empty?

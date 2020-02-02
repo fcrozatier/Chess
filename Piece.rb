@@ -14,7 +14,7 @@ class Piece
   end
 
   def possible_moves
-    board = notify("Piece wants board")
+    board = notify("Board")
     moves = []
     @legal_moves.each do |prefix|
       moves += board.method(prefix).call(x, y)

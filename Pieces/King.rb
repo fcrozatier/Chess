@@ -6,7 +6,7 @@ class King < Piece
   end
 
   def possible_moves
-    board = notify("Piece wants board")
+    board = notify("Board")
     moves = possible_castles
     @legal_moves.each do |prefix|
       moves += board.method(prefix).call(x, y).first(1)
@@ -16,7 +16,7 @@ class King < Piece
   end
 
   def update_position(final)
-    board = notify("Piece wants board")
+    board = notify("Board")
     if castle?(final)
       board.cells[y][7].piece.update_position("F#{y+1}") if final == "G#{y+1}"
       board.cells[y][0].piece.update_position("D#{y+1}") if final == "C#{y+1}"
@@ -29,7 +29,7 @@ class King < Piece
   end
 
   def possible_castles
-    board = notify("Piece wants board")
+    board = notify("Board")
     castles = []
     if nb_moves == 0 
       if !board.cells[y][7].empty? && board.cells[y][7].piece.nb_moves == 0

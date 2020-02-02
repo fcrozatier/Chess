@@ -19,11 +19,12 @@ class Manager
       @board.add(_sender)
     when "Remove piece"
       @board.remove(_sender)  
-    when "Piece wants board"
+    when "Board"
       @board
-    when "Player wants board"
-      @board
+    when "Last move"
+      other_player(_sender).last_move
     when "Player captures"
+      @board.remove(arg)
       other_player(_sender).active_pieces.delete(arg)
     when "Undo capture"
       if arg
